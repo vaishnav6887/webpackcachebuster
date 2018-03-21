@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Perform</title>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <div>Lets Load versioned bundled file.</div>
+    <button type="button" id="fetchClick">Fetch</button>
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $('#fetchClick').click(function () {
+                $.ajax({
+                    url: 'public/version.json',
+                    contentType: 'application/json',
+                    cache: false,
+                    crossDomain: true,
+                    success: (data) => {
+                        console.log('Bundle version loaded. Loading the Javascript with version');
+                        // Load the js file
+                        $.ajax({
+                            url: 'public/bundles/' + data.jsUrl,
+                            contentType: 'application/javascript',
+                            cache: true,
+                            crossDomain: true,
+                            success: (data) => {
+                                console.log('Bundle Js file loaded');
+                            },
+                            error: (xhr) => {
+                                console.log('There is an error loading bundle JS file');
+                            }
+                        });
+                    },
+                    error: (xhr) => {
+                        console.log('There is an error loading version file');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
